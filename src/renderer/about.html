@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    />
+    <title>About Verity</title>
+    <link rel="icon" id="favicon" />
+    <link rel="stylesheet" href="page.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <div class="verity-hero" style="align-items: flex-start; text-align: left">
+        <span class="verity-face" id="verity-face"></span>
+        <span class="verity-name">Verity</span>
+      </div>
+
+      <span class="badge" id="mode-badge">private by default</span>
+      <h1 style="margin-top: 14px">About <span class="accent">Verity</span></h1>
+      <p class="lede">
+        Verity is a browser that treats every outbound request as something that has to be justified. It
+        ships with one opinion: you should have to opt <em>out</em> of protection, never in.
+      </p>
+
+      <h2>The name, and the face</h2>
+      <p class="lede" id="name-note">
+        This browser is named after Verity, the smiling yellow sphere of the Minecraft horror series that
+        became a meme — a friendly assistant that turns out to know a little too much. The joke maps onto a
+        browser almost too well, so the whole interface is built around it: a bright, blocky, game-like
+        surface over a very dark room.
+      </p>
+      <p class="lede">
+        The mascot on this page is <b>original artwork drawn for this project</b> in that character's visual
+        language. Verity the character belongs to <span class="accent">ThatMob</span>'s series, and none of its
+        art is licensed for reuse, so this browser ships its own drawing rather than someone else's image.
+      </p>
+
+      <h2>Build</h2>
+      <div id="build"></div>
+      <p class="hint" id="profile-note" hidden></p>
+
+      <h2>Privacy defaults, on first launch</h2>
+      <ul class="plain" id="defaults"></ul>
+
+      <h2>How the privacy engine works</h2>
+      <ul class="plain" id="engine"></ul>
+
+      <h2>Keyboard shortcuts</h2>
+      <ul class="plain" id="shortcuts"></ul>
+    </main>
+    <script src="icons.js"></script>
+    <script src="about.js"></script>
+  </body>
+</html>

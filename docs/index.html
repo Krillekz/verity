@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'"
+    />
+    <title>Verity — a private desktop browser</title>
+    <meta
+      name="description"
+      content="Verity is a desktop browser built from scratch on Electron. Nothing is tracked by default, nothing is written to disk unless you ask for it, and every privacy switch is real."
+    />
+    <link rel="icon" id="favicon" />
+    <link rel="stylesheet" href="assets/palette.css" />
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="bar">
+      <div class="bar-inner">
+        <a class="brand" href="#top">
+          <span class="brand-mark" id="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">Verity</span>
+        </a>
+        <nav class="nav" aria-label="Sections">
+          <a href="#try">Try it</a>
+          <a href="#does">What it does</a>
+          <a href="#limits">Limits</a>
+          <a href="#verify">Verification</a>
+          <a href="#install">Install</a>
+        </nav>
+        <button id="theme" class="ghost-btn" type="button" aria-label="Switch between the dark and light theme">
+          <span id="theme-glyph" aria-hidden="true"></span>
+          <span id="theme-label">Light</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ------------------------------------------------------------ Hero -->
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <span class="badge" id="mode-badge">private session · nothing on disk</span>
+          <h1>The web, without the <span class="accent">paper trail</span>.</h1>
+          <p class="lede">
+            Verity is a desktop browser built from scratch on Electron. Nothing is tracked by default,
+            nothing is written to disk unless you ask for it, and every privacy switch is real — it
+            changes what the network layer does, not just what the interface says.
+          </p>
+          <div class="actions">
+            <a class="btn primary" href="#try">Try the rules in this page</a>
+            <a class="btn" href="#install">Install it</a>
+          </div>
+          <p class="hint" id="build-line">loading the engine…</p>
+        </div>
+
+        <!-- A drawing of the window rather than a screenshot. It is assembled from
+             the app's own palette, icon set and mascot, and the address bar in it
+             runs the browser's real resolver. -->
+        <div class="rig-wrap">
+          <div class="rig" role="img" aria-label="A drawing of the Verity window: the tab strip, the toolbar and the new tab page.">
+            <div class="rig-strip">
+              <span class="rig-brand" aria-hidden="true"></span>
+              <div class="rig-tabs" id="rig-tabs"></div>
+              <span class="rig-newtab" id="rig-newtab" aria-hidden="true"></span>
+            </div>
+            <div class="rig-toolbar">
+              <span class="rig-group" id="rig-nav" aria-hidden="true"></span>
+              <div class="omnibox" id="omnibox">
+                <span class="chip" id="rig-chip" aria-hidden="true"></span>
+                <input
+                  id="url-input"
+                  type="text"
+                  spellcheck="false"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  placeholder="Search privately or enter an address"
+                  aria-label="Address and search bar (the real resolver, running in this page)"
+                />
+                <span class="star" id="rig-star" aria-hidden="true"></span>
+              </div>
+              <span class="rig-group" id="rig-right" aria-hidden="true"></span>
+            </div>
+            <div class="rig-page">
+              <div class="rig-face" id="rig-face" aria-hidden="true"></div>
+              <span class="rig-name">Verity</span>
+              <p class="rig-line">Hey — it's me, Verity.</p>
+              <p class="rig-sub">
+                I already know what you were looking at. That is the joke. Nothing you look at here
+                leaves this machine, and nothing is written down.
+              </p>
+              <p class="rig-result" id="rig-result" aria-live="polite">
+                Type above: the address bar is the browser's own resolver, so this tells you where it
+                would actually go.
+              </p>
+              <div class="rig-cards" id="rig-cards"></div>
+            </div>
+          </div>
+          <p class="rig-caption">
+            A <b>drawing</b> of the window, not a screenshot — assembled from the app's own
+            <code>icons.js</code> and <code>chrome.css</code> at build time, so it cannot drift from the
+            real thing. The address bar is not a drawing: it is the browser's
+            <code>resolveInput()</code>, running in this page.
+          </p>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------- Try -->
+      <section id="try">
+        <h2 class="eyebrow">Run the real engine</h2>
+        <h3 class="section-title">Two panels, and the browser's own code inside them</h3>
+        <p class="lede">
+          These are not re-implementations for the website. The page loads
+          <code>blocklist.js</code> and <code>search.js</code> — the same files the browser's main
+          process loads — and calls them. Whatever you see here is what Verity would do.
+        </p>
+
+        <div class="panels">
+          <article class="panel">
+            <header class="panel-head">
+              <span class="panel-icon" id="icon-host" aria-hidden="true"></span>
+              <h4>Should Verity block this host?</h4>
+            </header>
+            <p class="panel-hint">
+              Rules match on a hostname <b>suffix boundary</b>, which is the whole difference between a
+              filter list that works and one that breaks sites.
+            </p>
+            <form class="row" id="host-form" autocomplete="off">
+              <input id="host-input" type="text" spellcheck="false" placeholder="ads.example.com" aria-label="Hostname to test" />
+              <button class="btn primary" type="submit">Check</button>
+            </form>
+            <div class="chips" id="host-chips"></div>
+            <p class="verdict" id="host-verdict" aria-live="polite">Waiting for a hostname.</p>
+            <p class="panel-note">
+              via <code>new Blocklist().match(host)</code>
+            </p>
+          </article>
+
+          <article class="panel">
+            <header class="panel-head">
+              <span class="panel-icon" id="icon-url" aria-hidden="true"></span>
+              <h4>What leaves the machine?</h4>
+            </header>
+            <p class="panel-hint">
+              Paste a link with campaign junk on it. Verity strips the known tracking parameters before
+              the request goes anywhere.
+            </p>
+            <form class="row" id="url-form" autocomplete="off">
+              <input id="url-input-demo" type="text" spellcheck="false" placeholder="https://shop.example/item?utm_source=news&id=42" aria-label="URL to clean" />
+              <button class="btn primary" type="submit">Strip</button>
+            </form>
+            <div class="chips" id="url-chips"></div>
+            <div class="verdict" id="url-verdict" aria-live="polite">Waiting for a URL.</div>
+            <p class="panel-note">
+              via <code>stripTrackingParams(url)</code> and <code>Blocklist.match(host)</code>
+            </p>
+          </article>
+        </div>
+
+        <div class="counters" id="counters"></div>
+        <p class="hint">
+          Counted in this tab, in memory, and sent nowhere — which is the only claim this page can make
+          about itself. The rest of the engine (HTTPS upgrading, third-party cookies and storage,
+          request headers, fingerprint surface) runs in the browser's main process and is
+          <b>not</b> reproduced here.
+        </p>
+      </section>
+
+      <!-- ----------------------------------------------------------- Does -->
+      <section id="does">
+        <h2 class="eyebrow">What it does</h2>
+        <h3 class="section-title">Protection you have to opt <em>out</em> of, never in</h3>
+        <p class="lede">
+          Every protective option ships switched on. The list below is the engine as the code has it,
+          not as a store page would put it.
+        </p>
+        <div class="grid" id="features"></div>
+        <p class="hint" id="defaults-line"></p>
+      </section>
+
+      <!-- --------------------------------------------------------- Limits -->
+      <section id="limits">
+        <h2 class="eyebrow">The honest part</h2>
+        <h3 class="section-title">What it will not do, and what it cannot prove</h3>
+        <p class="lede">
+          A privacy page that only lists wins is a page you should not believe. So, plainly:
+        </p>
+        <div class="split">
+          <div>
+            <h4 class="sub-title">Not built yet</h4>
+            <ul class="plain" id="not-built"></ul>
+          </div>
+          <div>
+            <h4 class="sub-title">Limits of the automated runs</h4>
+            <ul class="plain" id="run-limits"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- --------------------------------------------------------- Look -->
+      <section id="look">
+        <h2 class="eyebrow">Real captures</h2>
+        <h3 class="section-title">Photographed from the running application</h3>
+        <p class="lede">
+          Written by <code>npm run capture</code> into <code>artifacts/</code> and copied here at build
+          time. Two of them are the chrome strip; the third is the new tab page.
+        </p>
+        <div class="shots">
+          <figure>
+            <img src="assets/shots/the-strip.png" alt="The Verity tab strip and toolbar, captured from the running application." />
+            <figcaption>The strip and toolbar, with the shield count and the lock chip.</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/shots/the-strip-multitab.png" alt="The same strip with two tabs open." />
+            <figcaption>The same, with a second tab open.</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/shots/the-new-tab-page.png" alt="The Verity new tab page: the mascot, the greeting, the search field and the session cards." />
+            <figcaption>The new tab page: mascot, greeting, search field, session cards.</figcaption>
+          </figure>
+        </div>
+        <p class="hint">
+          There is deliberately no full-window screenshot. The page surface and the side panel are
+          separate Chromium views, and on this desktop a window capture does not include their pixels —
+          the project reports that as a limit rather than shipping a blank image as evidence. The panel
+          is verified by view geometry, visibility and DOM content against a real window instead, and the
+          drawing at the top of this page exists for the same reason.
+        </p>
+      </section>
+
+      <!-- -------------------------------------------------------- Verify -->
+      <section id="verify">
+        <h2 class="eyebrow">Verification</h2>
+        <h3 class="section-title">Two suites, because they can prove different things</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Command</th><th>What it covers</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>npm run smoke</code></td>
+                <td>
+                  39 headless checks: the rule engine, omnibox resolution, session isolation, request
+                  filtering against a local fixture server, cookie and header handling, HTTPS-only and
+                  its exceptions, tab lifecycle, the error interstitial, every panel's DOM driven
+                  through its own view, the mascot everywhere it belongs, the panel following a live
+                  theme change, and the profile argument refusing to be tricked out of its directory.
+                </td>
+              </tr>
+              <tr>
+                <td><code>npm run diagnose</code></td>
+                <td>
+                  5 checks against a real, visible, composited window: strip geometry, palette
+                  resolution, panel view placement, and <code>findInPage</code> with real match counts.
+                </td>
+              </tr>
+              <tr>
+                <td><code>npm run capture</code></td>
+                <td>The screenshots above, for human review.</td>
+              </tr>
+              <tr>
+                <td><code>npm run verify</code></td>
+                <td>Both suites together.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hint">
+          A check that cannot run is reported as a <b>skip</b>, never as a pass. <code>findInPage</code>
+          returns nothing to a software-composited window that never composited, so the smoke suite
+          skips it and the diagnose suite proves the same flow against a real window.
+        </p>
+      </section>
+
+      <!-- -------------------------------------------------------- Install -->
+      <section id="install">
+        <h2 class="eyebrow">Install</h2>
+        <h3 class="section-title">Run it from source, or build a real installer</h3>
+        <p class="lede">Requires Node 20+ and a desktop session — the browser renders real Chromium.</p>
+        <div class="grid install-grid" id="install-blocks"></div>
+        <p class="hint">
+          There is <b>no published release yet</b>, so there is nothing to download from here: the
+          installer is built on your own machine by the command above. It is also <b>not code-signed</b>,
+          so Windows will warn on first run, and it installs per user — it never needs administrator
+          rights.
+        </p>
+      </section>
+
+      <!-- ----------------------------------------------------------- Built -->
+      <section id="built">
+        <h2 class="eyebrow">How it is built</h2>
+        <h3 class="section-title">Everything that touches the network lives in the main process</h3>
+        <p class="lede">
+          The interface is only a view of it. Two view-level facts are worth knowing before reading the
+          code, because both look like bugs until you know why:
+        </p>
+        <div class="split">
+          <div>
+            <h4 class="sub-title">The map</h4>
+            <pre id="tree"></pre>
+          </div>
+          <div>
+            <h4 class="sub-title">The two facts</h4>
+            <ul class="plain">
+              <li>
+                <b>The side panel is its own view, not an element of the chrome document.</b> Chromium
+                composites the chrome document <em>under</em> the page views and never rasterises chrome
+                pixels in a region a view has covered, so a drawer drawn there stays blank. A view
+                renders as reliably as a page does.
+              </li>
+              <li>
+                <b>A child view does not always resolve through</b> <code>BrowserWindow.fromWebContents</code>.
+                The IPC gateway resolves a sender by view identity <em>and</em> origin, so exactly two
+                documents can drive a window: <code>verity://chrome</code> and <code>verity://panel</code>.
+                A web page never gets a bridge at all.
+              </li>
+            </ul>
+          </div>
+        </div>
+        <p class="hint">
+          This page is built the same way the icon is: <code>tools/build-site.js</code> lifts the mascot
+          from <code>icons.js</code>, the palette from <code>chrome.css</code> and the engine from
+          <code>blocklist.js</code>, then reloads what it wrote and compares it against the app across
+          <b id="probe-count">72</b> probe cases. A rotted copy fails the build.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="foot-inner">
+        <div class="foot-brand">
+          <span class="brand-mark" id="foot-mark" aria-hidden="true"></span>
+          <div>
+            <b>Verity</b>
+            <span id="foot-version">0.1.0</span>
+          </div>
+        </div>
+        <p>
+          Named after Verity, the smiling yellow sphere of the Minecraft horror series that became a
+          meme — a friendly assistant that turns out to know a little too much. A browser is a good place
+          for that joke.
+        </p>
+        <p>
+          The mascot is <b>original artwork drawn for this project</b> in that character's visual
+          language. Verity the character belongs to ThatMob's series and none of its art is licensed for
+          reuse, so this project ships its own drawing rather than someone else's image. Verity the
+          browser is not affiliated with that series or its creators.
+        </p>
+        <p class="foot-fine">
+          Source, tests and the build are in the repository this page is served from — the README has the
+          full story, including how to publish this site.
+        </p>
+      </div>
+    </footer>
+
+    <script src="assets/verity-art.js"></script>
+    <script src="assets/verity-engine.js"></script>
+    <script src="assets/verity-data.js"></script>
+    <script src="site.js"></script>
+  </body>
+</html>

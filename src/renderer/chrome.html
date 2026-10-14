@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https: http:; connect-src 'none'; form-action 'none'; base-uri 'none'"
+    />
+    <title>Verity</title>
+    <link rel="stylesheet" href="chrome.css" />
+  </head>
+  <body>
+    <!-- Everything that the page view does not cover lives inside #chrome. Its
+         measured height is reported to the main process, which keeps the page
+         surface exactly below it. -->
+    <div id="chrome">
+      <div id="titlebar">
+        <!-- The mascot: the smiling yellow sphere this theme is built around.
+             Decorative, and part of the window drag area. -->
+        <div id="brand" aria-hidden="true"></div>
+        <div id="tabstrip" role="tablist" aria-label="Tabs"></div>
+        <button id="new-tab" class="icon-btn" type="button" title="New tab (Ctrl+T)" aria-label="New tab"></button>
+        <div id="wco-inset" aria-hidden="true"></div>
+      </div>
+
+      <div id="toolbar">
+        <div class="group nav-group">
+          <button id="nav-back" class="icon-btn" type="button" data-command="back" title="Back (Alt+Left)" aria-label="Back"></button>
+          <button id="nav-forward" class="icon-btn" type="button" data-command="forward" title="Forward (Alt+Right)" aria-label="Forward"></button>
+          <button id="nav-reload" class="icon-btn" type="button" title="Reload (Ctrl+R)" aria-label="Reload"></button>
+          <button id="nav-home" class="icon-btn" type="button" data-command="home" title="Home (Alt+Home)" aria-label="Home"></button>
+        </div>
+
+        <form id="omnibox-form" autocomplete="off">
+          <div id="omnibox">
+            <button id="security-chip" class="chip" type="button" title="Connection and privacy info"></button>
+            <input
+              id="url-input"
+              type="text"
+              spellcheck="false"
+              autocomplete="off"
+              autocapitalize="off"
+              placeholder="Search privately or enter an address"
+              aria-label="Address and search bar"
+            />
+            <span id="omnibox-hint" aria-hidden="true"></span>
+            <button id="star" class="icon-btn" type="button" title="Bookmark this page" aria-label="Bookmark"></button>
+          </div>
+        </form>
+
+        <div class="group">
+          <button id="shield-btn" class="icon-btn shield" type="button" title="Shield (Ctrl+Shift+Y)" aria-label="Shield">
+            <span id="shield-glyph"></span>
+            <span id="shield-count" class="badge">0</span>
+          </button>
+          <button id="menu-btn" class="icon-btn" type="button" title="Menu" aria-label="Menu"></button>
+        </div>
+      </div>
+
+      <div id="bookmarks-bar" hidden></div>
+
+      <div id="findbar" hidden>
+        <input id="find-input" type="text" placeholder="Find in page" spellcheck="false" aria-label="Find in page" />
+        <span id="find-count">0/0</span>
+        <button id="find-prev" class="icon-btn small" type="button" title="Previous match (Shift+Enter)" aria-label="Previous match"></button>
+        <button id="find-next" class="icon-btn small" type="button" title="Next match (Enter)" aria-label="Next match"></button>
+        <button id="find-close" class="icon-btn small" type="button" title="Close (Esc)" aria-label="Close find bar"></button>
+      </div>
+
+      <div id="notice-bar" hidden>
+        <span id="notice-icon"></span>
+        <span id="notice-text"></span>
+        <button id="notice-close" class="icon-btn small" type="button" aria-label="Dismiss">✕</button>
+      </div>
+
+      <div id="progress" hidden><div id="progress-value"></div></div>
+    </div>
+
+    <!-- The side panel and the error page are separate documents: see panel.html
+         and blocked.html. Nothing here may overlap the page surface. -->
+    <script src="icons.js"></script>
+    <script src="chrome.js"></script>
+  </body>
+</html>

@@ -1,0 +1,60 @@
+{
+  "name": "verity",
+  "productName": "Verity",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Verity - a privacy-first desktop browser built on Electron.",
+  "author": "Verity",
+  "main": "src/main/main.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "smoke": "electron . --smoke",
+    "diagnose": "electron . --diagnose",
+    "capture": "electron . --capture",
+    "icon": "node tools/make-icon.js",
+    "verify": "npm run smoke && npm run diagnose",
+    "desktop:new": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/fresh-desktop.ps1",
+    "site": "node tools/build-site.js",
+    "site:serve": "node tools/serve-site.js",
+    "pack": "npm run icon && electron-builder --dir",
+    "dist": "npm run icon && electron-builder --win"
+  },
+  "build": {
+    "appId": "com.verity.browser",
+    "productName": "Verity",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Verity",
+      "artifactName": "Verity-Setup-${version}.${ext}"
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3"
+  }
+}

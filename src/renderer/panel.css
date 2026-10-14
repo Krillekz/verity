@@ -1,0 +1,48 @@
+/* Verity side panel — this document *is* the drawer, so unlike the chrome strip
+   it owns its whole surface. The palette and components come from chrome.css. */
+
+html,
+body {
+  height: 100%;
+  background: var(--bg-chrome-2);
+}
+
+#panel {
+  position: static;
+  height: 100%;
+  width: auto;
+  border-left: 0;
+  box-shadow: none;
+  z-index: auto;
+}
+
+#panel .panel-head {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+#panel .panel-body {
+  padding-top: 14px;
+}
+
+/* The drawer is narrow, so give the per-site switches room to wrap. */
+#panel .row {
+  align-items: flex-start;
+}
+
+#panel .row .switch {
+  margin-top: 2px;
+}
+
+#panel .domain-list li {
+  font-size: 12px;
+}
+
+.panel-error {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  color: var(--text-dim);
+  font-size: 12.5px;
+}

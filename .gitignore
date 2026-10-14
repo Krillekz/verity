@@ -1,0 +1,8 @@
+node_modules/
+dist/
+out/
+artifacts/
+.install.log
+*.log
+.DS_Store
+.freebuff/

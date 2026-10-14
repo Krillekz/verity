@@ -1,0 +1,454 @@
+/* Verity — shared styling for internal pages (verity://newtab, about, blocked).
+   These pages are rendered by the page WebContentsView, so they own the whole
+   area beneath the chrome strip. */
+
+:root {
+  --bg: #0a0a0c;
+  --bg-raised: #16161a;
+  --bg-hover: #202027;
+  --border: #292930;
+  --text: #f3f3f6;
+  --text-dim: #a3a3ad;
+  --text-faint: #71717c;
+  --accent: #ffd23f;
+  --accent-soft: rgba(255, 210, 63, 0.16);
+  --accent-ink: #1a1405;
+  --ok: #5ee08a;
+  --warn: #ffb020;
+  --danger: #ff6b6b;
+  --radius: 8px;
+  --radius-sm: 4px;
+  /* One block of the pixel grid the surfaces are built from. */
+  --block: 28px;
+  --bevel: inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f5ec;
+    --bg-raised: #fffdf6;
+    --bg-hover: #ece7d8;
+    --border: #d7d1be;
+    --text: #1a1710;
+    --text-dim: #5e5849;
+    --text-faint: #847d6a;
+    --accent: #b8860b;
+    --accent-soft: rgba(184, 134, 11, 0.14);
+    --accent-ink: #fffdf6;
+    --ok: #15803d;
+    --warn: #b45309;
+    --danger: #b91c1c;
+    --bevel: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -2px 0 rgba(90, 78, 40, 0.16);
+    color-scheme: light;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.55 system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 64px 28px 56px;
+}
+
+.wrap.centered {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h1 {
+  margin: 0 0 10px;
+  font-size: 30px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+h1 .accent {
+  color: var(--accent);
+}
+
+h2 {
+  margin: 34px 0 12px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+p {
+  margin: 0 0 12px;
+  color: var(--text-dim);
+}
+
+a {
+  color: var(--accent);
+}
+
+.lede {
+  font-size: 15px;
+  max-width: 62ch;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 0 8px;
+  padding: 0 16px;
+  height: 52px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-raised);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.search svg {
+  flex: 0 0 auto;
+  color: var(--text-faint);
+}
+
+.search input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+}
+
+.search input::placeholder {
+  color: var(--text-faint);
+}
+
+.hint {
+  color: var(--text-faint);
+  font-size: 12px;
+  margin: 0 0 4px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.card {
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+}
+
+.card .value {
+  display: block;
+  font-size: 26px;
+  font-weight: 650;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.card .value.accent {
+  color: var(--accent);
+}
+
+.card .label {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-dim);
+  font-size: 12.5px;
+}
+
+.card .sub {
+  display: block;
+  margin-top: 8px;
+  color: var(--text-faint);
+  font-size: 11.5px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11.5px;
+  font-weight: 550;
+}
+
+.badge.neutral {
+  background: var(--bg-hover);
+  color: var(--text-dim);
+}
+
+ul.plain {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul.plain li {
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+ul.plain li:last-child {
+  border-bottom: 0;
+}
+
+ul.plain li b {
+  color: var(--text);
+  font-weight: 550;
+}
+
+.kv {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.kv:last-child {
+  border-bottom: 0;
+}
+
+.kv b {
+  color: var(--text);
+  font-weight: 500;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+button.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-raised);
+  color: var(--text);
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+button.btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+}
+
+button.btn.primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: #fff;
+}
+
+button.btn.primary:hover {
+  filter: brightness(1.08);
+}
+
+button.btn.ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-dim);
+}
+
+button.btn.ghost:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+button.btn.danger {
+  border-color: transparent;
+  background: rgba(248, 113, 113, 0.15);
+  color: var(--danger);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------- the theme
+ *
+ * Verity is a friendly yellow sphere over a dark room: bright, blocky, a little
+ * too knowing. Every surface here is a block with a bevel, and the page itself
+ * sits on a faint pixel grid, like the ground of a world.
+ */
+
+body {
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--text) 3.5%, transparent) 0 1px,
+      transparent 1px var(--block)
+    ),
+    repeating-linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--text) 3.5%, transparent) 0 1px,
+      transparent 1px var(--block)
+    );
+  background-attachment: fixed;
+}
+
+.card,
+.search {
+  box-shadow: var(--bevel);
+}
+
+.card {
+  border-radius: var(--radius);
+}
+
+/* The search field is a block, not a pill. */
+.search {
+  border-radius: var(--radius);
+  height: 54px;
+}
+
+.search:focus-within {
+  border-color: var(--accent);
+  box-shadow: var(--bevel), 0 0 0 3px var(--accent-soft);
+}
+
+button.btn {
+  border-radius: var(--radius-sm);
+  box-shadow: var(--bevel);
+  font-weight: 600;
+}
+
+button.btn.primary {
+  color: var(--accent-ink);
+  border-color: color-mix(in srgb, var(--accent) 55%, #000);
+  font-weight: 700;
+}
+
+button.btn.primary:hover {
+  filter: none;
+  background: color-mix(in srgb, var(--accent) 88%, #fff);
+}
+
+button.btn.danger {
+  background: color-mix(in srgb, var(--danger) 16%, transparent);
+}
+
+.badge {
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------- the mascot */
+
+.verity-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.verity-face {
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 16px 30px rgba(0, 0, 0, 0.5));
+  animation: hover 7s ease-in-out infinite;
+}
+
+.verity-face svg {
+  display: block;
+}
+
+.verity-name {
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.verity-line {
+  margin: 12px 0 0;
+  font-size: 17px;
+  color: var(--text);
+}
+
+.verity-sub {
+  margin: 4px 0 0;
+  max-width: 48ch;
+  font-size: 13px;
+  color: var(--text-faint);
+}
+
+.verity-inline {
+  display: inline-grid;
+  place-items: center;
+  vertical-align: -3px;
+  margin-right: 6px;
+}
+
+@keyframes hover {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1.4deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(1.4deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .verity-face {
+    animation: none;
+  }
+}

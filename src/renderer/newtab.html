@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    />
+    <title>New tab</title>
+    <!-- The mark in the tab strip: the same face the whole theme is built on. -->
+    <link rel="icon" id="favicon" />
+    <link rel="stylesheet" href="page.css" />
+  </head>
+  <body>
+    <main class="wrap centered">
+      <!-- The mascot, front and centre. It greets you the way it greets everyone,
+           and the joke is that it already knows what you were looking at. The
+           second line is also true: nothing here has left the machine. -->
+      <div class="verity-hero">
+        <span class="verity-face" id="verity-face"></span>
+        <span class="verity-name">Verity</span>
+        <p class="verity-line">Hey — it's me, Verity.</p>
+        <p class="verity-sub">
+          I already know what you were looking at. That is the joke. Nothing you look at here leaves this
+          machine, and nothing is written down.
+        </p>
+      </div>
+
+      <span class="badge" id="mode-badge" style="margin-top: 18px">starting…</span>
+
+      <h1 style="margin-top: 16px">The web, without the <span class="accent">paper trail</span>.</h1>
+      <p class="lede" id="lede">Search privately, or type an address.</p>
+
+      <form class="search" id="search-form" autocomplete="off">
+        <span id="search-icon"></span>
+        <input id="query" type="text" placeholder="Search or enter an address" autofocus spellcheck="false" aria-label="Search or enter an address" />
+      </form>
+      <p class="hint" id="engine-hint"></p>
+
+      <h2>Since Verity started</h2>
+      <div class="cards" id="cards"></div>
+
+      <h2>What Verity does for you</h2>
+      <ul class="plain" id="features"></ul>
+
+      <div class="actions">
+        <button class="btn primary" type="button" id="open-shield">See the shield</button>
+        <button class="btn" type="button" id="open-settings">Privacy settings</button>
+      </div>
+    </main>
+    <script src="icons.js"></script>
+    <script src="newtab.js"></script>
+  </body>
+</html>

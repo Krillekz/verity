@@ -1,0 +1,156 @@
+'use strict';
+
+/**
+ * Verity's icon set, shared by the chrome strip and the side panel.
+ *
+ * Plain script, not a module: both documents load it before their own script and
+ * read `globalThis.VERITY_ICONS`. CSP allows same-origin scripts only, so this is
+ * the one sanctioned global in the UI.
+ */
+
+const svg = (body, attrs = '') =>
+  `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${attrs}>${body}</svg>`;
+
+/* ------------------------------------------------------------------ Verity
+ * The mascot: the smiling yellow sphere the whole theme is built around.
+ *
+ * This is original vector art drawn for this project in the meme's visual
+ * language (a friendly yellow smiley), not a copy of anybody's asset. (The
+ * Verity character belongs to ThatMob's series, whose art is not licensed for
+ * reuse, so the browser ships its own drawing instead.) Gradients need
+ * document-unique ids, so each call gets a fresh suffix.
+ */
+
+let mascotSeq = 0;
+
+/** The sphere, with a face. `mood` is 'happy' (default) or 'flat'. */
+globalThis.verityMascot = ({ size = 96, mood = 'happy' } = {}) => {
+  const id = `verity-grad-${(mascotSeq += 1)}`;
+  const lid = mood === 'flat' ? '<path d="M18.6 25.4h8.8M36.6 25.4h8.8" stroke="#17120a" stroke-width="1.8" stroke-linecap="round"/>' : '';
+  const smile =
+    mood === 'flat'
+      ? '<path d="M22 40.4h20" stroke="#17120a" stroke-width="3.2" stroke-linecap="round"/>'
+      : '<path d="M20.5 37.5c4.8 7 18.2 7 23 0" fill="none" stroke="#17120a" stroke-width="3.4" stroke-linecap="round"/>';
+  return `<svg viewBox="0 0 64 64" width="${size}" height="${size}" role="img" aria-label="Verity">
+    <defs>
+      <radialGradient id="${id}" cx="36%" cy="28%" r="82%">
+        <stop offset="0%" stop-color="#ffe9a3"/>
+        <stop offset="45%" stop-color="#ffd23f"/>
+        <stop offset="100%" stop-color="#d69a12"/>
+      </radialGradient>
+    </defs>
+    <circle cx="32" cy="32" r="29.4" fill="url(#${id})" stroke="#7d5a0c" stroke-width="1.6"/>
+    <ellipse cx="22.8" cy="26" rx="3.3" ry="4.5" fill="#17120a"/>
+    <ellipse cx="41.2" cy="26" rx="3.3" ry="4.5" fill="#17120a"/>
+    ${lid}
+    ${smile}
+    <ellipse cx="21" cy="14.6" rx="6.4" ry="4" fill="#ffffff" opacity="0.34" transform="rotate(-26 21 14.6)"/>
+  </svg>`;
+};
+
+/**
+ * The blocky mark: the same face as Minecraft-flavoured pixels, on a 16-unit
+ * grid so it stays legible at 16–20px, where the gradient sphere turns to mush.
+ *
+ * The cells below are the single source of truth for the mark: the SVG here and
+ * the app icon (tools/make-icon.js) are both drawn from them, so the window icon
+ * can never drift from the face in the strip.
+ */
+const MARK_COLORS = Object.freeze({
+  Y: '#ffd23f',
+  S: '#c98f10',
+  H: '#ffe9a3',
+  D: '#17120a',
+});
+
+const MARK_BODY = [
+  [6, 2, 4, 1],
+  [4, 3, 8, 1],
+  [3, 4, 10, 8],
+  [4, 12, 8, 1],
+  [6, 13, 4, 1],
+];
+// The lit top-left and the shaded bottom-right stop it reading as a flat blob.
+const MARK_SHADE = [
+  [11, 4, 2, 3],
+  [10, 7, 3, 3],
+  [8, 10, 5, 1],
+  [6, 11, 6, 1],
+  [8, 12, 2, 1],
+];
+const MARK_HIGHLIGHT = [
+  [4, 4, 3, 1],
+  [3, 5, 3, 2],
+];
+const MARK_FACE = [
+  [5, 6, 2, 2],
+  [10, 6, 2, 2],
+  [6, 9, 1, 1],
+  [7, 10, 3, 1],
+  [10, 9, 1, 1],
+];
+
+/** Painted back to front, so the face sits over the body and its shading. */
+globalThis.VERITY_MARK = {
+  size: 16,
+  colors: MARK_COLORS,
+  cells: [
+    ...MARK_BODY.map((rect) => ({ rect, key: 'Y' })),
+    ...MARK_SHADE.map((rect) => ({ rect, key: 'S' })),
+    ...MARK_HIGHLIGHT.map((rect) => ({ rect, key: 'H' })),
+    ...MARK_FACE.map((rect) => ({ rect, key: 'D' })),
+  ],
+};
+
+globalThis.verityMark = ({ size = 18 } = {}) => {
+  const rect = ([x, y, w, h], key) =>
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${MARK_COLORS[key]}"/>`;
+  return `<svg viewBox="0 0 16 16" width="${size}" height="${size}" shape-rendering="crispEdges" role="img" aria-label="Verity">${globalThis.VERITY_MARK.cells
+    .map((cell) => rect(cell.rect, cell.key))
+    .join('')}</svg>`;
+};
+
+/** The mark as a favicon data URL, so internal pages show it in the tab strip. */
+globalThis.verityFavicon = (size = 64) =>
+  `data:image/svg+xml,${encodeURIComponent(globalThis.verityMark({ size }))}`;
+
+globalThis.VERITY_ICONS = {
+  back: svg('<path d="M15 18l-6-6 6-6"/>'),
+  forward: svg('<path d="M9 6l6 6-6 6"/>'),
+  reload: svg('<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4.2V9h-4.8"/>'),
+  stop: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
+  spinner: svg('<path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5"/>'),
+  home: svg('<path d="M3.5 10.5L12 3l8.5 7.5"/><path d="M6 9.5V20h12V9.5"/>'),
+  lock: svg('<rect x="4.5" y="10.5" width="15" height="9.5" rx="2.2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>'),
+  warn: svg('<path d="M12 3.6l9 15.8H3z"/><path d="M12 9.6v4.2"/><path d="M12 17.2h.01"/>'),
+  shield: svg('<path d="M12 3.2l7.5 2.6v6.1c0 4.2-3.1 7.3-7.5 8.9-4.4-1.6-7.5-4.7-7.5-8.9V5.8z"/>'),
+  shieldCheck: svg(
+    '<path d="M12 3.2l7.5 2.6v6.1c0 4.2-3.1 7.3-7.5 8.9-4.4-1.6-7.5-4.7-7.5-8.9V5.8z"/><path d="M8.9 12.1l2.2 2.2 4.1-4.2"/>'
+  ),
+  globe: svg('<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.6 2.7 2.6 14.3 0 17M12 3.5c-2.6 2.7-2.6 14.3 0 17"/>'),
+  star: svg('<path d="M12 3.7l2.7 5.5 6 .9-4.3 4.3 1 6-5.4-2.9-5.4 2.9 1-6L3.3 10.1l6-.9z"/>'),
+  starOn:
+    '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3.7l2.7 5.5 6 .9-4.3 4.3 1 6-5.4-2.9-5.4 2.9 1-6L3.3 10.1l6-.9z"/></svg>',
+  menu: svg('<path d="M4.5 7h15M4.5 12h15M4.5 17h15"/>'),
+  close: svg('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>'),
+  plus: svg('<path d="M12 5.5v13M5.5 12h13"/>'),
+  search: svg('<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>'),
+  up: svg('<path d="M6 14.5l6-6 6 6"/>'),
+  down: svg('<path d="M6 9.5l6 6 6-6"/>'),
+  incognito: svg(
+    '<path d="M3.5 15.5h17"/><path d="M6.2 15.5l1.5-5 3-.9 1.3-2.6 1.3 2.6 3 .9 1.5 5"/><circle cx="7.3" cy="16.7" r="2.1"/><circle cx="16.7" cy="16.7" r="2.1"/>'
+  ),
+  trash: svg('<path d="M4.5 7h15"/><path d="M9.5 7V5.2h5V7"/><path d="M6.6 7l.9 12.3h9l.9-12.3"/>'),
+  bookmarks: svg('<path d="M6.5 4h11v16.2L12 15.9l-5.5 4.3z"/>'),
+  gear: svg(
+    '<circle cx="12" cy="12" r="3.1"/><path d="M12 3.4v2.2M12 18.4v2.2M5 7.9l1.9 1.1M17.1 15l1.9 1.1M5 16.1l1.9-1.1M17.1 9l1.9-1.1"/>'
+  ),
+  info: svg('<circle cx="12" cy="12" r="8.5"/><path d="M12 11.2v5.3"/><path d="M12 7.9h.01"/>'),
+  check: svg('<path d="M5 12.6l4.5 4.4L19 7.4"/>'),
+  external: svg(
+    '<path d="M14 4.5h5.5V10"/><path d="M19.5 4.5L11.5 12.5"/><path d="M18 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"/>'
+  ),
+  bolt: svg('<path d="M13.5 3L6 13.5h5L10.5 21 18 10.5h-5z"/>'),
+  arrowRight: svg('<path d="M5 12h14"/><path d="M13.5 5.5L20 12l-6.5 6.5"/>'),
+  refresh: svg('<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4.2V9h-4.8"/>'),
+};

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    />
+    <title>Page unavailable</title>
+    <link rel="icon" id="favicon" />
+    <link rel="stylesheet" href="page.css" />
+  </head>
+  <body>
+    <main class="wrap centered">
+      <!-- Verity is not amused: the face carries the failure, and the two moods
+           are the only difference between a friendly screen and this one. -->
+      <div class="verity-hero" style="margin-bottom: 14px">
+        <span class="verity-face" id="verity-face"></span>
+      </div>
+      <span class="badge" id="badge">unavailable</span>
+      <h1 id="title">Verity could not reach that page</h1>
+      <p class="lede" id="explanation"></p>
+      <div class="card" style="margin-top: 20px">
+        <span class="label">Address</span>
+        <code
+          id="address"
+          style="display: block; margin-top: 6px; word-break: break-all; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px"
+        ></code>
+        <span class="sub" id="detail"></span>
+      </div>
+      <div class="actions">
+        <button class="btn primary" type="button" id="retry">Try again</button>
+        <button class="btn danger" type="button" id="proceed" hidden>Load over HTTP anyway (unsafe)</button>
+        <button class="btn" type="button" id="home">Go to the new tab page</button>
+        <button class="btn ghost" type="button" id="shield">Shield settings</button>
+      </div>
+      <p class="hint" id="hint"></p>
+    </main>
+    <script src="icons.js"></script>
+    <script src="blocked.js"></script>
+  </body>
+</html>
