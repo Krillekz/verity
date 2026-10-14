@@ -98,8 +98,9 @@ for Verity's own data.)
 
 ## The website
 
-`docs/` is a published site for the project, ready for GitHub Pages, and it is
-built from the app rather than written alongside it:
+`docs/` is the project's published site — live at
+<https://krillekz.github.io/verity/> — and it is built from the app rather than
+written alongside it:
 
 ```
 npm run site               # regenerate docs/assets/ from src/
@@ -137,20 +138,30 @@ HTML, CSS and one script, and it works opened straight from the filesystem.
 
 ### Publishing it
 
-The repository has no remote yet, so from a checkout:
+The site is live at <https://krillekz.github.io/verity/>, published from
+<https://github.com/Krillekz/verity> with **Settings → Pages → Source → GitHub
+Actions**. Every push to `main` runs `.github/workflows/pages.yml`, which
+rebuilds `docs/`, refuses to publish if the committed site is stale against
+`src/`, and then deploys it.
+
+To stand the same thing up from a fresh checkout:
 
 ```
 git init -b main
 git add . && git commit -m "Verity"
-gh repo create verity --public --source=. --push     # or add a remote by hand
+gh repo create verity --public --source=. --push
 ```
 
-Then **Settings → Pages → Source → GitHub Actions**: the workflow in
-`.github/workflows/pages.yml` rebuilds `docs/`, refuses to publish if the
-committed site is stale against `src/`, and deploys it. The plain alternative is
-**Source → Deploy from a branch → `main` / `docs`**, which needs no workflow at
-all; in that case the stale-site check does not run, so run `npm run site`
-yourself after changing anything the site draws.
+Do this **before** the first push, so the initial run cannot fail against a
+Pages site that does not exist yet:
+
+```
+gh api -X POST repos/<owner>/verity/pages -f build_type=workflow
+```
+
+The plain alternative is **Source → Deploy from a branch → `main` / `docs`**,
+which needs no workflow at all; in that case the stale-site check does not run,
+so run `npm run site` yourself after changing anything the site draws.
 
 ## Installing it
 
